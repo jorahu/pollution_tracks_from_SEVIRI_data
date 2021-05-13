@@ -48,7 +48,7 @@ levelsCWP = np.arange(20.0, 320.0, 20.0)
 levelsPrecip = np.arange(0., 11., 0.5)
 # %%
 if killer == True: # For testing purposes
-    f = 'C:/Users/IdaJorma/Desktop/kood/SEVIR_OPER_R___MSGCPP__L2__20161011T000000_20161012T000000_0001.nc'
+    f = './SEVIR_OPER_R___MSGCPP__L2__20161011T000000_20161012T000000_0001.nc'
 
 else: pass
 try:
@@ -68,7 +68,7 @@ lona = datafile.variables['lon'][:]
 lonsdat = np.where(lona.data == -999., 0., lona.data)
 #----------------------------------------------------------------------------#
 # Reads time_thresh files
-time_thresh = pd.read_csv('C:/Users/IdaJorma/Desktop/time_thresh_2.csv', index_col=0,
+time_thresh = pd.read_csv('./time_thresh_2.csv', index_col=0,
                           parse_dates=['thresh_alg','thresh_lopp'],
                           date_parser = pd.to_datetime)
 time_thresh.index = pd.to_datetime(time_thresh.index)
@@ -94,7 +94,7 @@ cols = [
 
 dict_of_df = {}
 
-path_vert = 'C:/Users/IdaJorma/Desktop/kood/area_vertices2/{:s}/'.format(dt[0].strftime('%Y_%m_%d'))
+path_vert = './area_vertices2/{:s}/'.format(dt[0].strftime('%Y_%m_%d'))
 vert_files = os.listdir(path_vert)
 try:
     for i, vvert in enumerate(vert_files): # Creates separate DataFrame for every vertice
@@ -171,7 +171,6 @@ for ts, _dt in enumerate(dt):
         x1 = vertice_corners[:, 0].min(); x2 = vertice_corners[:, 0].max() # logitude extent
         y1 = vertice_corners[:, 1].min(); y2 = vertice_corners[:, 1].max() # latitude extent
 #----------------------------------------------------------------------------#
-        # Vahekontroll, et kui filter kõik ära sööb, siis ei läheks edasi
         # Checkpoint, if filter eats up all data, skip further processing for this timestep
         reff_filtered = np.where(filt == 1.0, reff, 0.) # Filtered data
         reff_unfiltmask = np.where(maskk, reff, np.nan) # Unfiltered data
