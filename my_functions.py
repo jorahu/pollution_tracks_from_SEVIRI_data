@@ -113,7 +113,6 @@ def filt(datafile, ts_):
 
     return filtr
 
-# %%
 def datetime_from_nc(_datafile):
     """ Gets dates from netCDF file """
     time_var = _datafile.variables['time'][:] # datetime values from file
@@ -142,6 +141,7 @@ def imshow(mat):
     plt.show()
 
 def find_nearest(array, value):
+    """ Helper function to find nearest array index to value """
     array = np.asarray(array)
     idx = (np.abs(array - value)).argmin()
     return array[idx]
@@ -163,15 +163,15 @@ def mapp(ax, x1, x2, y1, y2, lon_cities, lat_cities, city_names):
     ax.add_feature(cfeature.BORDERS.with_scale('50m'), linewidth = 0.5)
     gl = ax.gridlines(crs=ccrs.PlateCarree(), draw_labels = True,
                       linewidth = 0.2, color = 'black', alpha=0.5, linestyle = '--')
-    gl.xlocator = mticker.FixedLocator(np.arange(-180., 180., 5.)) # pikkusjooned
-    gl.ylocator = mticker.FixedLocator(np.arange(-90., 90., 5.)) # laiusjooned
-    gl.xlabels_top = False # eemaldab ülevalt tickid
-    gl.ylabels_right = False # eemaldab paremalt tickid
-    # Linnad
+    gl.xlocator = mticker.FixedLocator(np.arange(-180., 180., 5.)) # Longitude lines
+    gl.ylocator = mticker.FixedLocator(np.arange(-90., 90., 5.)) # Latitude lines
+    gl.xlabels_top = False # Removes ticks from top
+    gl.ylabels_right = False # Removes ticks from right
+    # Cities
     ax.plot(lon_cities, lat_cities, marker = 'x', ls = '', markersize = 14, mec = 'k', mew = 5, alpha = 0.7)
     ax.plot(lon_cities, lat_cities, marker = 'x', ls = '', markersize = 12, mec = 'w', mew = 1, alpha = 0.9)
 
-    name_letters = [x[:3] for x in city_names] # esinimed
+    name_letters = [x[:3] for x in city_names] # First 3 letters from each city name
     for i in range(len(lon_cities)):
         ax.text(lon_cities[i] + 0.05, lat_cities[i] - 0.01, name_letters[i],
                  color = 'aqua', horizontalalignment='left', transform=ccrs.Geodetic(), alpha = 0.9, clip_on = True)
@@ -243,6 +243,7 @@ def timeseries_mean(param, df, ts, path, fig, fname_key, save_fig = False):
     plt.clf()
 
 def check_dest_dir(path):
+    """ Checks if path exist and creates it if not """
     try:
         if not os.path.exists(path):
             os.mkdir(path)
@@ -251,7 +252,7 @@ def check_dest_dir(path):
         print ("Creation of the directory %s failed" % path)
 
 def get_mask_from_verts(data_path, lons_, lats_):
-    """ Calculates custom area masks """
+    """ Calculates custom area masks from given vertice points """
     verts_files = os.listdir(data_path)
     temps = []
     maskk_ = np.zeros(lons_.shape, dtype = bool)
@@ -272,7 +273,7 @@ def get_mask_from_verts2(data_path, lons_, lats_):
         Here only single area is selected and not combined together.
     """
     maskk_ = np.zeros(lons_.shape, dtype = bool)
-    # lat-lon väärtused
+    # lat-lon values
     xypix = np.vstack((lons_.ravel(), lats_.ravel())).T
     xycrop = np.loadtxt(data_path) # Vertices to cut by
     pth = Path(xycrop, closed=False)
@@ -288,10 +289,10 @@ def filled_area_check(reff_masked_, mask_):
     total_datapoints = np.count_nonzero(reff_masked_)
     total_maskpoints = np.count_nonzero(mask_)
     coverage = total_datapoints / total_maskpoints
-    if coverage < 0.5: # vähem, kui 50% kaetus
-        print('Warning! Ala katvus alla 50%: {:.2f}% '.format(coverage*100))
+    if coverage < 0.5: # Less than 50% coverage
+        print('Warning! Area coverage below 50%: {:.2f}% '.format(coverage*100))
         return False
     else:
-        print('Success! Ala katvus: {:.2f}%'.format(coverage*100))
+        print('Success! Area coverage: {:.2f}%'.format(coverage*100))
         return True
 
