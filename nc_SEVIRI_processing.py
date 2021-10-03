@@ -105,7 +105,7 @@ except:
     print('Problem with dataframe creation.')
 # %%----------------------------------------------------------------------------#
 # Destination path
-path = 'C:/Users/IdaJorma/Desktop/TEST/{:s}/{:s}/'.format(destpaf, dt[0].strftime('%Y_%m_%d'))
+path = 'path_to_destination_here/{:s}/{:s}/'.format(destpaf, dt[0].strftime('%Y_%m_%d'))
 mf.check_dest_dir(path) # Checks if path exists and creates one, if needed
 #----------------------------------------------------------------------------#
 # Data processing
@@ -142,14 +142,14 @@ for ts, _dt in enumerate(dt):
         filt = mf.filt(datafile, ts)
     except Exception:
         mf.PrintException()
-        print('Problem with: ts: {:02d} | dt: {:s} Took: {:.1f}'\
+        print('Problem with: ts: {:02d} | dt: {:s} Took: {:.1f} s'\
               .format(ts, _dt.strftime('%Y-%m-%d %H:%M'), timer()-alg))
         continue
 
     # For every vertice separately
     for i, vert in enumerate(vert_files):
         vert_nr = int(vert[-5])
-#        if vert_nr == 3: pass
+#        if vert_nr == 3: pass # Uncomment for specific vertice
 #        else: continue
         print('Using vert: {:d} at {:s}'.format(vert_nr, _dt.strftime('%Y-%m-%d %H:%M')))
 
